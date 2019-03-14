@@ -445,10 +445,28 @@ class Domain(object):
         for entity in tracker.latest_message.entities:
             intent_name = tracker.latest_message.intent.get("name")
             intent_config = self.intent_config(intent_name)
-            should_use_entity = intent_config.get('use_entities', True)
+            entity_name = entity["entity"]
+
+            included_entities = intent_config.get('include_entities', [])
+            excluded_entities = intent_config.get('exclude_entities', [])
+
+            include_explicitly = entity_name in included_entities
+            exclude_explicitly = entity_name in excluded_entities
+
+            if include_explicitly and exclude_explicitly:
+                logger.warning(
+                    "Entity '{}' is explicitly included and excluded."
+                    "Excluding takes precedence in this case."
+                    "Please resolve that ambiguity."
+                    "".format(entity_name))
+
+            include_default = intent_config.get('use_entities', True)
+            should_use_entity = ((include_explicitly or include_default) and
+                not exclude_explicitly)
+
             if should_use_entity:
                 if "entity" in entity:
-                    key = "entity_{0}".format(entity["entity"])
+                    key = "entity_{0}".format(entity_name)
                     state_dict[key] = 1.0
 
         # Set all set slots with the featurization of the stored value
