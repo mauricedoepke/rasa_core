@@ -107,6 +107,42 @@ def test_create_train_data_with_history(default_domain):
         '{"intent_default": 1.0, "prev_action_listen": 1.0}]'
     ]
 
+def test_create_train_data_unfeaturized_entities():
+    domain_file = "data/test_domains/default_unfeaturized_entities.yml"
+    stories_file = "data/test_stories/stories_unfeaturized_entities.md"
+    domain = Domain.load(domain_file)
+    featurizer = MaxHistoryTrackerFeaturizer(max_history=1)
+    training_trackers = training.load_data(
+        stories_file, domain, augmentation_factor=0)
+
+    assert len(training_trackers) == 3
+    (decoded, _) = featurizer.training_states_and_actions(
+        training_trackers, domain)
+
+    # decoded needs to be sorted
+    hashed = []
+    for states in decoded:
+        hashed.append(json.dumps(states, sort_keys=True))
+    hashed = sorted(hashed, reverse=True)
+
+    assert hashed == [
+        '[{}]',
+        '[{"intent_greet": 1.0, "prev_utter_greet": 1.0}]',
+        '[{"intent_greet": 1.0, "prev_action_listen": 1.0}]',
+        '[{"intent_goodbye": 1.0, "prev_utter_goodbye": 1.0}]',
+        '[{"intent_goodbye": 1.0, "prev_action_listen": 1.0}]',
+        '[{"intent_default": 1.0, "prev_utter_default": 1.0}]',
+        '[{"intent_default": 1.0, "prev_utter_default": 1.0, '
+        '"slot_name_0": 1.0}]',
+        '[{"intent_default": 1.0, "prev_action_listen": 1.0}]',
+        '[{"intent_default": 1.0, "prev_action_listen": 1.0, '
+        '"slot_name_0": 1.0}]',
+        '[{"entity_name": 1.0, "intent_greet": 1.0, '
+        '"prev_utter_greet": 1.0, "slot_name_0": 1.0}]',
+        '[{"entity_name": 1.0, "intent_greet": 1.0, '
+        '"prev_action_listen": 1.0, "slot_name_0": 1.0}]'
+    ]
+
 
 def test_domain_from_template():
     domain_file = DEFAULT_DOMAIN_PATH
