@@ -406,7 +406,7 @@ class Domain(object):
         for entity in tracker.latest_message.entities:
             intent_name = tracker.latest_message.intent.get("name")
             intent_config = self.intent_config(intent_name)
-            
+
             if "entity" in entity:
                 entity_name = entity["entity"]
                 include_default = intent_config.get('use_entities', True)
@@ -415,7 +415,7 @@ class Domain(object):
                 include_explicitly = entity_name in included_entities
                 exclude_explicitly = entity_name in excluded_entities
                 should_use_entity = ((include_explicitly or include_default) and
-                                    not exclude_explicitly)
+                                     not exclude_explicitly)
 
                 if include_explicitly and exclude_explicitly:
                     logger.warning(
