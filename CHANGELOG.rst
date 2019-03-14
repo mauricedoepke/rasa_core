@@ -26,6 +26,7 @@ Added
 - added ``priority`` property of policies to influence best policy in 
   the case of equal confidence
 - added rasa command line interface and API
+- added support to indivually in/exclude entities for every intent
 
 Changed
 -------
