@@ -133,11 +133,11 @@ def test_create_train_data_unfeaturized_entities():
         '[{"intent_goodbye": 1.0, "prev_utter_goodbye": 1.0}]',
         '[{"intent_goodbye": 1.0, "prev_action_listen": 1.0}]',
         '[{"entity_name": 1.0, "intent_greet": 1.0, "prev_utter_greet": 1.0}]',
-        '[{"entity_name": 1.0, "intent_greet": 1.0,',
+        '[{"entity_name": 1.0, "intent_greet": 1.0, '
         '"prev_action_listen": 1.0}]',
-        '[{"entity_name": 1.0, "entity_other": 1.0, "intent_default": 1.0,',
+        '[{"entity_name": 1.0, "entity_other": 1.0, "intent_default": 1.0, '
         '"prev_utter_default": 1.0}]',
-        '[{"entity_name": 1.0, "entity_other": 1.0, "intent_default": 1.0,',
+        '[{"entity_name": 1.0, "entity_other": 1.0, "intent_default": 1.0, ' 
         '"prev_action_listen": 1.0}]'
     ]
 

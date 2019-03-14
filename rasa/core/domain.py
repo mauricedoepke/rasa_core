@@ -445,25 +445,25 @@ class Domain(object):
         for entity in tracker.latest_message.entities:
             intent_name = tracker.latest_message.intent.get("name")
             intent_config = self.intent_config(intent_name)
-            entity_name = entity["entity"]
+            
+            if "entity" in entity:
+                entity_name = entity["entity"]
+                include_default = intent_config.get('use_entities', True)
+                included_entities = intent_config.get('include_entities', [])
+                excluded_entities = intent_config.get('exclude_entities', [])
+                include_explicitly = entity_name in included_entities
+                exclude_explicitly = entity_name in excluded_entities
+                should_use_entity = ((include_explicitly or include_default) and
+                                    not exclude_explicitly)
 
-            include_default = intent_config.get('use_entities', True)
-            included_entities = intent_config.get('include_entities', [])
-            excluded_entities = intent_config.get('exclude_entities', [])
-            include_explicitly = entity_name in included_entities
-            exclude_explicitly = entity_name in excluded_entities
-            should_use_entity = ((include_explicitly or include_default) and
-                                 not exclude_explicitly)
+                if include_explicitly and exclude_explicitly:
+                    logger.warning(
+                        "Entity '{}' is explicitly included and excluded."
+                        "Excluding takes precedence in this case."
+                        "Please resolve that ambiguity."
+                        "".format(entity_name))
 
-            if include_explicitly and exclude_explicitly:
-                logger.warning(
-                    "Entity '{}' is explicitly included and excluded."
-                    "Excluding takes precedence in this case."
-                    "Please resolve that ambiguity."
-                    "".format(entity_name))
-
-            if should_use_entity:
-                if "entity" in entity:
+                if should_use_entity:
                     key = "entity_{0}".format(entity_name)
                     state_dict[key] = 1.0
 
