@@ -116,9 +116,9 @@ def test_create_train_data_unfeaturized_entities():
     training_trackers = training.load_data(
         stories_file, domain, augmentation_factor=0)
 
-    """assert len(training_trackers) == 3
+    """assert len(training_trackers) == 3"""
     (decoded, _) = featurizer.training_states_and_actions(
-        training_trackers, domain)"""
+        training_trackers, domain)
 
     # decoded needs to be sorted
     hashed = []
