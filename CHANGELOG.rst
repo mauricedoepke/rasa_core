@@ -15,6 +15,7 @@ Added
 - ``tf.ConfigProto`` configuration can now be specified
   for tensorflow based pipelines
 - open api spec for the Rasa Core SDK action server
+- added tracker store persisting trackers into a SQL database (``SQLTrackerStore``)
 - documentation about early deactivation of a form in validation
 - Added max_event_history in tracker_store to set this value in DialogueStateTracker
 - utility functions for colored logging
@@ -27,6 +28,8 @@ Added
   the case of equal confidence
 - added rasa command line interface and API
 - added support to indivually in/exclude entities for every intent
+- Rasa Stack HTTP training endpoint at ``POST /jobs``. This endpoint
+  will train a combined Rasa Core and NLU model.
 
 Changed
 -------
