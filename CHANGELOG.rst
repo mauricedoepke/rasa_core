@@ -15,9 +15,11 @@ Added
 - ``tf.ConfigProto`` configuration can now be specified
   for tensorflow based pipelines
 - open api spec for the Rasa Core SDK action server
-- added tracker store persisting trackers into a SQL database (``SQLTrackerStore``)
+- added tracker store persisting trackers into a SQL database
+  (``SQLTrackerStore``)
 - documentation about early deactivation of a form in validation
-- Added max_event_history in tracker_store to set this value in DialogueStateTracker
+- Added max_event_history in tracker_store to set this value in
+  ``DialogueStateTracker``
 - utility functions for colored logging
 - open webbrowser when visualizing stories
 - added ``/parse`` endpoint to query for NLU results
@@ -30,11 +32,14 @@ Added
 - added support to indivually in/exclude entities for every intent
 - Rasa Stack HTTP training endpoint at ``POST /jobs``. This endpoint
   will train a combined Rasa Core and NLU model.
+- ``Tracker.active_form`` now includes ``trigger_message`` attribute to allow
+  access to message triggering the form
 
 Changed
 -------
 - starter packs are now tested in parallel with the unittests,
   and only on master and branches ending in ``.x`` (i.e. new version releases)
+- for interactive learning only include manually annotated and ner_crf entities in nlu export
 - renamed ``train_dialogue_model`` to ``train``
 - renamed ``rasa_core.evaluate`` to ``rasa_core.test``
 - ``event_broker.publish`` receives the event as a dict instead of text
@@ -43,11 +48,10 @@ Changed
 - renamed ``policy_metadata.json`` to ``metadata.json`` for persisted models
 - ``scores`` array returned by the ``/conversations/{sender_id}/predict``
   endpoint is now sorted according to the actions' scores.
-- now randomly created augmented stories are subsampled during training and marked,
-  so that memo policies can ignore them
-- changed payloads from "text" to "message" in files: server.yml, docs/connectors.rst, rasa_core/server.py, rasa_core/training/interactive.py, tests/test_interactive.py
-- changed payloads from "text" to "message" in files: server.yml, docs/connectors.rst, 
-  rasa_core/server.py, rasa_core/training/interactive.py, tests/test_interactive.py
+- made ``message_id`` an additional argument to ``interpreter.parse``
+- now randomly created augmented stories are subsampled during training
+  and marked, so that memo policies can ignore them
+- changed payloads from "text" to "message" in documentation files
 - dialogue files in ``/data/test_dialogues`` were updated with conversations
   from the bots in ``/examples``
 
@@ -61,8 +65,7 @@ Fixed
   storyline is saved (not just the last)
 - Handles slot names which contain characters that are invalid as python 
   variable name (e.g. dot) in a template
-- When a ``fork`` is used in interactive learning, every forked storyline 
-  is saved (not just the last)
+- in interactive learning: only updates entity values if user changes annotation
 
 [0.13.3] - 2019-03-04
 ^^^^^^^^^^^^^^^^^^^^^
@@ -128,7 +131,7 @@ Added
 
 Removed
 -------
-- support for deprecated intents/entities format
+- removed support for deprecated intents/entities format
 
 Changed
 -------
@@ -142,6 +145,7 @@ Changed
 - updated docs for interactive learning to inform users of the
   ``--core`` flag
 - Change memoization policies confidence score to 1.1 to override ML policies
+- replaced flask server with async sanic
 
 Fixed
 -----
