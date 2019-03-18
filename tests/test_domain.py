@@ -108,12 +108,12 @@ async def test_create_train_data_with_history(default_domain):
     ]
 
 
-def test_create_train_data_unfeaturized_entities():
+async def test_create_train_data_unfeaturized_entities():
     domain_file = "data/test_domains/default_unfeaturized_entities.yml"
     stories_file = "data/test_stories/stories_unfeaturized_entities.md"
     domain = Domain.load(domain_file)
     featurizer = MaxHistoryTrackerFeaturizer(max_history=1)
-    training_trackers = training.load_data(
+    training_trackers = await training.load_data(
         stories_file, domain, augmentation_factor=0)
 
     assert len(training_trackers) == 2
