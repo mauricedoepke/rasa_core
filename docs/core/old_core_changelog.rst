@@ -89,7 +89,11 @@ Added
 - added ``priority`` property of policies to influence best policy in
   the case of equal confidence
 - added rasa command line interface and API
-- added support to indivually in/exclude entities for every intent
+- added support to individually in-/exclude entities for every intent
+- Rasa Stack HTTP training endpoint at ``POST /jobs``. This endpoint
+  will train a combined Rasa Core and NLU model.
+- ``Tracker.active_form`` now includes ``trigger_message`` attribute to allow
+  access to message triggering the form
 
 Changed
 -------
