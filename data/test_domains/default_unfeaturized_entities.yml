@@ -1,6 +1,6 @@
 intents:
- - greet: {use_entities: false, include_entities: [name]}
- - default: {use_entities: true, exclude_entities : [unrelated_recognized_entity]}
+ - greet: {include_entities: [name]}
+ - default: {exclude_entities : [unrelated_recognized_entity]}
  - goodbye: {use_entities: false}
 
 entities:
