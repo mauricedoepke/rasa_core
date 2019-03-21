@@ -445,14 +445,15 @@ class Domain(object):
                 entity_name = entity["entity"]
                 included_entities = intent_config.get('include_entities', [])
                 excluded_entities = intent_config.get('exclude_entities', [])
-                
+
                 include_default = False if included_entities else True
                 include_implicitly = intent_config.get(
                     'use_entities', include_default)
                 include_explicitly = entity_name in included_entities
                 exclude_explicitly = entity_name in excluded_entities
-                should_use_entity = ((include_explicitly or include_implicitly)
-                                     and not exclude_explicitly)
+                should_use_entity = (
+                    (include_explicitly or include_implicitly) and
+                    not exclude_explicitly)
 
                 if include_explicitly and exclude_explicitly:
                     logger.warning(
