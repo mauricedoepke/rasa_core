@@ -226,7 +226,7 @@ into account you can use this syntax:
 .. code-block:: yaml
 
   intents:
-    - greet: {use_entities: false, include_entities: [name]}
+    - greet: {include_entities: [name]}
     - goodbye: {exclude_entities: [location]}
 
 
