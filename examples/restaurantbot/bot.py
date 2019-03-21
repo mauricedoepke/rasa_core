@@ -4,9 +4,10 @@ import logging
 
 import rasa.utils
 from policy import RestaurantPolicy
-from rasa_core import utils
-from rasa_core.agent import Agent
-from rasa_core.policies.memoization import MemoizationPolicy
+from rasa.core import utils
+from rasa.core.agent import Agent
+from rasa.core.policies.memoization import MemoizationPolicy
+from rasa.core.policies.mapping_policy import MappingPolicy
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +22,7 @@ async def train_dialogue(domain_file="domain.yml",
                          training_data_file="data/stories.md"):
     agent = Agent(domain_file,
                   policies=[MemoizationPolicy(max_history=3),
+                            MappingPolicy(),
                             RestaurantPolicy(batch_size=100, epochs=400,
                                              validation_split=0.2)])
 
