@@ -780,9 +780,9 @@ def _intents_from_messages(messages):
     """Return all intents that occur in at least one of the messages."""
 
     distinct_intents = {m.data["intent"]
-               for m in messages
-               if "intent" in m.data}
-               
+                        for m in messages
+                        if "intent" in m.data}
+
     return distinct_intents
 
 
