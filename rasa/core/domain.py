@@ -229,14 +229,9 @@ class Domain(object):
     def collect_intent_properties(intent_list):
         intent_properties = {}
         for intent in intent_list:
-            if isinstance(intent, dict):
-                for properties in intent.values():
-                    if 'use_entities' not in properties:
-                        properties['use_entities'] = True
-                intent_properties.update(intent)
-            else:
-                intent = {intent: {'use_entities': True}}
-                intent_properties.update(intent)
+            if not isinstance(intent, dict):
+                intent = {intent: {}}
+            intent_properties.update(intent)
         return intent_properties
 
     @staticmethod
@@ -450,7 +445,7 @@ class Domain(object):
                 entity_name = entity["entity"]
                 included_entities = intent_config.get('include_entities', [])
                 excluded_entities = intent_config.get('exclude_entities', [])
-
+                
                 include_default = False if included_entities else True
                 include_implicitly = intent_config.get(
                     'use_entities', include_default)
@@ -630,7 +625,7 @@ class Domain(object):
          Strips redundant keys with default values."""
 
         data = self.as_dict()
-
+        #TODO WHAT EXACTLY DOES THIS AND HOW DOES IT AFFECT INCLUDE/EXCLUDE_ENTITIES
         for idx, intent_info in enumerate(data["intents"]):
             for name, intent in intent_info.items():
                 if intent.get("use_entities"):
