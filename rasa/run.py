@@ -1,8 +1,8 @@
-import os
 import logging
+import os
 import shutil
 import typing
-from typing import Text, Dict, Union, Tuple
+from typing import Dict, Text
 
 from rasa.cli.utils import minimal_kwargs
 from rasa.model import get_model, get_model_subdirectories
@@ -10,7 +10,7 @@ from rasa.model import get_model, get_model_subdirectories
 logger = logging.getLogger(__name__)
 
 if typing.TYPE_CHECKING:
-    from rasa_core.agent import Agent
+    from rasa.core.agent import Agent
 
 
 def run(model: Text, endpoints: Text, connector: Text = None,
@@ -24,13 +24,15 @@ def run(model: Text, endpoints: Text, connector: Text = None,
         field).
         credentials: Path to channel credentials file.
         **kwargs: Additional arguments which are passed to
-        `rasa_core.run.serve_application`.
+        `rasa.core.run.serve_application`.
 
     """
-    import rasa_core.run
+    import rasa.core.run
+    from rasa.core.utils import AvailableEndpoints
 
     model_path = get_model(model)
-    _agent = create_agent(model_path, endpoints)
+    core_path, nlu_path = get_model_subdirectories(model_path)
+    _endpoints = AvailableEndpoints.read_endpoints(endpoints)
 
     if not connector and not credentials:
         channel = "cmdline"
@@ -40,20 +42,22 @@ def run(model: Text, endpoints: Text, connector: Text = None,
     else:
         channel = connector
 
-    kwargs = minimal_kwargs(kwargs, rasa_core.run.serve_application)
-    rasa_core.run.serve_application(_agent, channel=channel,
+    kwargs = minimal_kwargs(kwargs, rasa.core.run.serve_application)
+    rasa.core.run.serve_application(core_path,
+                                    nlu_path,
+                                    channel=channel,
                                     credentials_file=credentials,
+                                    endpoints=_endpoints,
                                     **kwargs)
     shutil.rmtree(model_path)
 
 
 def create_agent(model: Text,
                  endpoints: Text = None) -> 'Agent':
-    from rasa_core.broker import PikaProducer
-    from rasa_core.interpreter import RasaNLUInterpreter
-    import rasa_core.run
-    from rasa_core.tracker_store import TrackerStore
-    from rasa_core.utils import AvailableEndpoints
+    from rasa.core.interpreter import RasaNLUInterpreter
+    from rasa.core.tracker_store import TrackerStore
+    from rasa.core import broker
+    from rasa.core.utils import AvailableEndpoints
 
     core_path, nlu_path = get_model_subdirectories(model)
     _endpoints = AvailableEndpoints.read_endpoints(endpoints)
@@ -65,11 +69,13 @@ def create_agent(model: Text,
         _interpreter = None
         logging.info("No NLU model found. Running without NLU.")
 
-    _broker = PikaProducer.from_endpoint_config(_endpoints.event_broker)
+    _broker = broker.from_endpoint_config(_endpoints.event_broker)
 
     _tracker_store = TrackerStore.find_tracker_store(None,
                                                      _endpoints.tracker_store,
                                                      _broker)
-    return rasa_core.run.load_agent(core_path, interpreter=_interpreter,
-                                    tracker_store=_tracker_store,
-                                    endpoints=_endpoints)
+
+    return Agent.load(core_path,
+                      generator=_endpoints.nlg,
+                      tracker_store=_tracker_store,
+                      action_endpoint=_endpoints.action)
