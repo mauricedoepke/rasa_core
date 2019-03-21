@@ -283,8 +283,8 @@ templates:
 
 
 @pytest.mark.parametrize('intent_list, intent_properties', [
-    (['greet', 'goodbye'], {'greet': {'use_entities': True},
-                            'goodbye': {'use_entities': True}}),
+    (['greet', 'goodbye'], {'greet': {},
+                            'goodbye': {}}),
     ([{'greet': {'use_entities': False}}, 'goodbye'],
         {'greet': {'use_entities': False},
          'goodbye': {'use_entities': True}}),
