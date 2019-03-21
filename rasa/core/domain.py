@@ -625,7 +625,7 @@ class Domain(object):
          Strips redundant keys with default values."""
 
         data = self.as_dict()
-        #TODO WHAT EXACTLY DOES THIS AND HOW DOES IT AFFECT INCLUDE/EXCLUDE_ENTITIES
+        # seems to remove use_entities: true ??
         for idx, intent_info in enumerate(data["intents"]):
             for name, intent in intent_info.items():
                 if intent.get("use_entities"):
