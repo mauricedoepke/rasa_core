@@ -779,12 +779,11 @@ def _entities_from_messages(messages):
 def _intents_from_messages(messages):
     """Return all intents that occur in at least one of the messages."""
 
-    # set of distinct intents
-    intents = {m.data["intent"]
+    distinct_intents = {m.data["intent"]
                for m in messages
                if "intent" in m.data}
-
-    return [{i: {"use_entities": True}} for i in intents]
+               
+    return distinct_intents
 
 
 async def _write_domain_to_file(
