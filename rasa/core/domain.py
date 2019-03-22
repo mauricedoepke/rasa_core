@@ -446,7 +446,7 @@ class Domain(object):
                 included_entities = intent_config.get('include_entities', [])
                 excluded_entities = intent_config.get('exclude_entities', [])
 
-                include_default = False if included_entities else True
+                include_default = not included_entities
                 include_implicitly = intent_config.get(
                     'use_entities', include_default)
                 include_explicitly = entity_name in included_entities
