@@ -229,9 +229,17 @@ class Domain(object):
     def collect_intent_properties(intent_list):
         intent_properties = {}
         for intent in intent_list:
-            if not isinstance(intent, dict):
-                intent = {intent: {}}
+            if isinstance(intent, dict):
+                for properties in intent.values():
+                    properties.setdefault('use_entities', True)
+                    properties.setdefault('ignore_entities', [])
+                    if properties['use_entities'] == None:
+                        print('set to list')
+                        properties['use_entities'] = []
+            else:
+                intent = {intent: {'use_entities': True, 'ignore_entities': []}}
             intent_properties.update(intent)
+        print(intent_properties)
         return intent_properties
 
     @staticmethod
@@ -437,34 +445,32 @@ class Domain(object):
 
         # Set all found entities with the state value 1.0, unless they should
         # be ignored for the current intent
-        for entity in tracker.latest_message.entities:
-            intent_name = tracker.latest_message.intent.get("name")
-            intent_config = self.intent_config(intent_name)
+        latest_message = tracker.latest_message
+        intent_name = latest_message.intent.get("name")
+        intent_config = self.intent_config(intent_name)
+        entities = latest_message.entities
+        named_entities = [entity for entity in entities if "entity" in entity]
+        entity_names = set([entity['entity'] for entity in named_entities])
 
-            if "entity" in entity:
-                entity_name = entity["entity"]
-                included_entities = intent_config.get('include_entities', [])
-                excluded_entities = intent_config.get('exclude_entities', [])
+        #use_entities is either a list of explicitely included entities 
+        #or True if all should be included
+        include = intent_config.get('use_entities')
+        included_entities = set(named_entities if include == True else include)
+        excluded_entities = set(intent_config.get('ignore_entities'))
+        wanted_entities = included_entities - excluded_entities
+        ambiguous_entities = included_entities & excluded_entities
+        existing_wanted_entities = entity_names & wanted_entities
 
-                include_default = not included_entities
-                include_implicitly = intent_config.get(
-                    'use_entities', include_default)
-                include_explicitly = entity_name in included_entities
-                exclude_explicitly = entity_name in excluded_entities
-                should_use_entity = (
-                    (include_explicitly or include_implicitly) and
-                    not exclude_explicitly)
+        if ambiguous_entities:
+            logger.warning(
+                "Entities: '{}' are explicitly included and excluded."
+                "Excluding takes precedence in this case."
+                "Please resolve that ambiguity."
+                "".format(ambiguous_entities))
 
-                if include_explicitly and exclude_explicitly:
-                    logger.warning(
-                        "Entity '{}' is explicitly included and excluded."
-                        "Excluding takes precedence in this case."
-                        "Please resolve that ambiguity."
-                        "".format(entity_name))
-
-                if should_use_entity:
-                    key = "entity_{0}".format(entity_name)
-                    state_dict[key] = 1.0
+        for entity_name in existing_wanted_entities:
+            key = "entity_{0}".format(entity_name)
+            state_dict[key] = 1.0
 
         # Set all set slots with the featurization of the stored value
         for key, slot in tracker.slots.items():
