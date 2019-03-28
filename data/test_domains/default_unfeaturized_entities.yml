@@ -1,7 +1,7 @@
 intents:
  - greet: {include_entities: [name]}
- - default: {exclude_entities : [unrelated_recognized_entity]}
- - goodbye: {use_entities: false}
+ - default: {ignore_entities : [unrelated_recognized_entity]}
+ - goodbye: {use_entities: None}
 
 entities:
  - name
