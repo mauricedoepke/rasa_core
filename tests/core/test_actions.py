@@ -70,7 +70,7 @@ def test_domain_action_instantiation():
 
 def test_domain_fails_on_duplicated_actions():
     with pytest.raises(ValueError):
-        Domain(intent_properties={},
+        Domain(intent_list=[],
                entities=[],
                slots=[],
                templates={},
