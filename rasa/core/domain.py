@@ -133,7 +133,11 @@ class Domain(object):
         slots = cls.collect_slots(data.get("slots", {}))
         additional_arguments = data.get("config", {})
         return cls(
+<<<<<<< HEAD
             data.get("intents", {}),
+=======
+            data.get("intents",{}),
+>>>>>>> f0c643ad904582bcf683981afcf80d8ddcc832b5
             data.get("entities", []),
             slots,
             utter_templates,
@@ -231,7 +235,11 @@ class Domain(object):
                 for properties in intent.values():
                     properties.setdefault('use_entities', True)
                     properties.setdefault('ignore_entities', [])
+<<<<<<< HEAD
                     if properties['use_entities'] is None:
+=======
+                    if properties['use_entities'] == None:
+>>>>>>> f0c643ad904582bcf683981afcf80d8ddcc832b5
                         properties['use_entities'] = []
             else:
                 intent = {intent: {'use_entities': True, 'ignore_entities': []}}
@@ -262,7 +270,11 @@ class Domain(object):
         return templates
 
     def __init__(self,
+<<<<<<< HEAD
                  intent_list,
+=======
+                 intent_list, #add type again
+>>>>>>> f0c643ad904582bcf683981afcf80d8ddcc832b5
                  entities: List[Text],
                  slots: List[Slot],
                  templates: Dict[Text, Any],
@@ -443,6 +455,7 @@ class Domain(object):
         # be ignored for the current intent
         latest_message = tracker.latest_message
         intent_name = latest_message.intent.get("name")
+<<<<<<< HEAD
         # only featurize entities if an intent has been recognized
         if intent_name:
             intent_config = self.intent_config(intent_name)
@@ -456,6 +469,19 @@ class Domain(object):
             include = intent_config.get('use_entities')
             included_entities = set(entity_names 
                 if include is True else include)
+=======
+        #only featurize entities if an intent has been recognized
+        if intent_name:
+            intent_config = self.intent_config(intent_name)
+            entities = latest_message.entities
+            named_entities = [entity for entity in entities if "entity" in entity]
+            entity_names = set([entity['entity'] for entity in named_entities])
+
+            #use_entities is either a list of explicitely included entities 
+            #or True if all should be included
+            include = intent_config.get('use_entities')
+            included_entities = set(entity_names if include == True else include)
+>>>>>>> f0c643ad904582bcf683981afcf80d8ddcc832b5
             excluded_entities = set(intent_config.get('ignore_entities'))
             wanted_entities = included_entities - excluded_entities
             ambiguous_entities = included_entities & excluded_entities
