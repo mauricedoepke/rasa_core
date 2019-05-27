@@ -133,11 +133,7 @@ class Domain(object):
         slots = cls.collect_slots(data.get("slots", {}))
         additional_arguments = data.get("config", {})
         return cls(
-<<<<<<< HEAD
-            data.get("intents", {}),
-=======
             data.get("intents",{}),
->>>>>>> f0c643ad904582bcf683981afcf80d8ddcc832b5
             data.get("entities", []),
             slots,
             utter_templates,
