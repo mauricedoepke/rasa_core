@@ -800,15 +800,12 @@ async def _write_domain_to_file(
     actions = _collect_actions(evts)
 
     # TODO for now there is no way to distinguish between action and form
-    intent_properties = Domain.collect_intent_properties(
-        _intents_from_messages(messages))
-
     collected_actions = list({e["name"]
                               for e in actions
                               if e["name"] not in default_action_names()})
 
     new_domain = Domain(
-        intent_properties=intent_properties,
+        intent_list=_intents_from_messages(messages),
         entities=_entities_from_messages(messages),
         slots=[],
         templates={},
