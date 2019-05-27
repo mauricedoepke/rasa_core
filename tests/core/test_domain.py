@@ -283,24 +283,24 @@ templates:
 
 
 @pytest.mark.parametrize('intent_list, intent_properties', [
-    (['greet', 'goodbye'], 
-    {'greet': {'use_entities': True, 'ignore_entities': []}, 
-    'goodbye': {'use_entities': True, 'ignore_entities': []}}),
+    (['greet', 'goodbye'],
+        {'greet': {'use_entities': True, 'ignore_entities': []},
+        'goodbye': {'use_entities': True, 'ignore_entities': []}}),
 
     ([{'greet': {'use_entities': []}}, 'goodbye'],
-    {'greet': {'use_entities': [], 'ignore_entities': []},
-    'goodbye': {'use_entities': True, 'ignore_entities': []}}),
+        {'greet': {'use_entities': [], 'ignore_entities': []},
+        'goodbye': {'use_entities': True, 'ignore_entities': []}}),
 
-    ([{'greet': {'maps_to': 'utter_goodbye', 
-    'use_entities': ['entity'], 'ignore_entities': ['other']}}, 'goodbye'],
-    {'greet': {'maps_to': 'utter_goodbye', 'use_entities': ['entity'],
-    'ignore_entities': ['other']},
-    'goodbye': {'use_entities': True, 'ignore_entities': []}}),
+    ([{'greet': {'maps_to': 'utter_goodbye',
+        'use_entities': ['entity'], 'ignore_entities': ['other']}}, 'goodbye'],
+        {'greet': {'maps_to': 'utter_goodbye', 'use_entities': ['entity'],
+        'ignore_entities': ['other']},
+        'goodbye': {'use_entities': True, 'ignore_entities': []}}),
 
     ([{'greet': {'maps_to': 'utter_goodbye', 'use_entities': None}},
-    {'goodbye': {'use_entities': [], 'ignore_entities': []}}],
-    {'greet': {'use_entities': [], 'ignore_entities': [],
-    'maps_to': 'utter_goodbye'},
-    'goodbye': {'use_entities': [], 'ignore_entities': []}})])
+        {'goodbye': {'use_entities': [], 'ignore_entities': []}}],
+        {'greet': {'use_entities': [], 'ignore_entities': [],
+        'maps_to': 'utter_goodbye'},
+        'goodbye': {'use_entities': [], 'ignore_entities': []}})])
 def test_collect_intent_properties(intent_list, intent_properties):
     assert Domain.collect_intent_properties(intent_list) == intent_properties

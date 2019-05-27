@@ -107,6 +107,7 @@ class PolicyTestCollection(object):
 
     async def test_persist_and_load(self, trained_policy, default_domain,
                                     tmpdir):
+
         trained_policy.persist(tmpdir.strpath)
         loaded = trained_policy.__class__.load(tmpdir.strpath)
         trackers = await train_trackers(default_domain, augmentation_factor=20)
