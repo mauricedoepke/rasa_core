@@ -303,7 +303,4 @@ templates:
     'maps_to': 'utter_goodbye'},
     'goodbye': {'use_entities': [], 'ignore_entities': []}})])
 def test_collect_intent_properties(intent_list, intent_properties):
-    print('testooo')
-    print(Domain.collect_intent_properties(intent_list))
-    print(intent_properties)
     assert Domain.collect_intent_properties(intent_list) == intent_properties
