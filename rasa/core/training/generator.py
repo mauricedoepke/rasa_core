@@ -551,8 +551,6 @@ class TrainingDataGenerator(object):
         end_trackers = []  # for all steps
 
         for tracker in trackers:
-            print('domain')
-            print(self.domain)
             states = tuple(tracker.past_states(self.domain))
             hashed = hash(states)
 
